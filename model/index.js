@@ -1,5 +1,5 @@
 const { connection } = require('./config');
-const userSchema = require('./userScheama');
+const userSchema = require('./userSchema');
 
 
 module.exports = {

@@ -13,7 +13,7 @@ This is a boilerplate project using the following technologies:
 - [Mongo](https://www.mongodb.com/)
 
 ```shell
-npm install
+npm install && npm install --prefix client
 ```
 
 ## Running
