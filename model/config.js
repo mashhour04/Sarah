@@ -1,5 +1,5 @@
 const config = require('config');
-const url = config.get('mongodb') || 'mongodb+srv://ahmed:9873216@ali-g2zcb.mongodb.net/alibot?retryWrites=true&authMechanism=SCRAM-SHA-1';
+const url = config.get('mongodb');
 console.log('process env', process.env.mongodb);
 // connect to db and setup auto-increment
 const mongoose = require('mongoose');
