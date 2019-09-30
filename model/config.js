@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const bunyanMongoDbLogger = require('bunyan-mongodb-logger');
 
 const logger = new bunyanMongoDbLogger({
-  name: 'alibot_logs',
+  name: 'sarah_app_logs',
   streams: ['stdout', 'mongodb'],
   url,
   level: process.env.LOG_LEVEL || 'info'

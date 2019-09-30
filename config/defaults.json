@@ -1,5 +1,9 @@
-{ 
-    "server_url":"https://7ba6c1f9.ngrok.io/",
-    "mongodb": "mongodb://localhost:27017/sarah",
-    "local":true
+{
+    "server_url": "https://aliboardserver.herokuapp.com",
+    "facebookAccessToken": "EAACNynhTBT0BAPZCZAqxmGhEN3AAjGxZCZBYXmQhIZBjTFhbL6pGZBTkeOSrznTVQEaJokhr8OrEZAGmuoTksAmgpVRNOC6HfK5t1irJPDOtkJRhktOsFNF2LFDOB7n42n1rcCo6fIxCaLMSyMrbgioYjiOmMpXf53qK6fdWixsXAZDZD",
+    "verify_token": "sarah",
+    "callbackURL": "http://localhost:3000/auth/facebook/callback",
+    "FACEBOOK_APP_ID": "FACEBOOK_APP_ID",
+    "FACEBOOK_APP_SECRET": "FACEBOOK_APP_SECRET",
+    "local": true
 }
