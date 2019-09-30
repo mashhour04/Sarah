@@ -1,9 +1,11 @@
 {
     "server_url": "https://aliboardserver.herokuapp.com",
+    "mongodb": "mongodb://localhost:27017/sarah",
     "facebookAccessToken": "EAACNynhTBT0BAPZCZAqxmGhEN3AAjGxZCZBYXmQhIZBjTFhbL6pGZBTkeOSrznTVQEaJokhr8OrEZAGmuoTksAmgpVRNOC6HfK5t1irJPDOtkJRhktOsFNF2LFDOB7n42n1rcCo6fIxCaLMSyMrbgioYjiOmMpXf53qK6fdWixsXAZDZD",
+    "facebookGroupAPIToken": "EAAieW3vdsNsBAPFJBf0WgRQIcgrtL8jrXGN70C1N4yWoCZAA2eZCLEzyJDaxaBu3NwrvcHzrQbDJMEg7nTUdfXyns63T9IJftmV7CsCs2aKtRh3a84nFMucs6BSOFk93mZAK0lawANnd5CMvXIzm3E2rkJaZCghkJhhZBYOxkDZAp4qdvfZC886M6tSBqeNHjZC2wAGbZBamOSAZDZD",
     "verify_token": "sarah",
-    "callbackURL": "http://localhost:3000/auth/facebook/callback",
-    "FACEBOOK_APP_ID": "FACEBOOK_APP_ID",
-    "FACEBOOK_APP_SECRET": "FACEBOOK_APP_SECRET",
+    "callbackURL": "https://acfcae20.ngrok.io/auth/facebook/callback",
+    "FACEBOOK_APP_ID": "2425915571024091",
+    "FACEBOOK_APP_SECRET": "ef9a5d299bfcd04f1ef7207e9e7fad4d",
     "local": true
 }

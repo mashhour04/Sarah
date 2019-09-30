@@ -1,16 +1,22 @@
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
+const config = require('config');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const log = require('npmlog');
 const multer = require('multer');
 const passport = require('passport');
+
 const jwt = require('jsonwebtoken');
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 const { Strategy } = require('passport-local');
+const FacebookStrategy = require('passport-facebook');
+
+const { adminModel } = require('./model');
+const collector = require('./services/collector')
 
 require('dotenv').config();
 
@@ -49,12 +55,18 @@ passport.use(
 passport.use(
   new FacebookStrategy(
     {
-      clientID: FACEBOOK_APP_ID,
-      clientSecret: FACEBOOK_APP_SECRET,
-      callbackURL:  config.get('callbackURL')
+      clientID: config.get('FACEBOOK_APP_ID'),
+      clientSecret: config.get('FACEBOOK_APP_SECRET'),
+      callbackURL: config.get('callbackURL')
     },
     function(accessToken, refreshToken, profile, cb) {
-      User.findOrCreate({ facebookId: profile.id }, function(err, user) {
+      adminModel.findOrCreate({ facebookId: profile.id, profile, accessToken, refreshToken }, function(
+        err,
+        user
+      ) {
+        if(err) {
+          console.log('error happened in passport facebook', err.message)
+        }
         return cb(err, user);
       });
     }
@@ -110,22 +122,18 @@ app.use(passport.session());
 
 app.get('/backend/failure', (req, res) => {
   log.info('authentication failed');
-  res
-    .status(401)
-    .json({
-      success: false,
-      errors: [{ param: 'username or password', msg: 'incorrect' }]
-    });
+  res.status(401).json({
+    success: false,
+    errors: [{ param: 'username or password', msg: 'incorrect' }]
+  });
 });
 
 app.get('/failure', (req, res) => {
   log.info('authentication failed');
-  res
-    .status(401)
-    .json({
-      success: false,
-      errors: [{ param: 'username or password', msg: 'incorrect' }]
-    });
+  res.status(401).json({
+    success: false,
+    errors: [{ param: 'username or password', msg: 'incorrect' }]
+  });
 });
 
 app.post('/avatar', uploads.single('avatar'), (req, res, next) => {
@@ -151,11 +159,18 @@ app.post(
   loginHandler
 );
 
-app.use(
-  '/backend/api',
-  passport.authenticate('jwt', { session: false }),
-  apiRouter.getRouter
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['groups_access_member_info', 'publish_to_groups']  }));
+
+app.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login'}),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    console.log('callback', req.user)
+    res.redirect('/');
+  }
 );
+
 app.use(
   '/api',
   passport.authenticate('jwt', { session: false }),
