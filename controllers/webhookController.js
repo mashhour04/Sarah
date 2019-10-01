@@ -8,7 +8,7 @@ const { messengerService } = require('../services/messenger');
 
 const { postBacks } = require('./postBacks');
 const { quickReplies } = require('./quickReplies');
-const texts = require('../services/texts');
+const TextsReceiver = require('../services/receivers/textsReceiver');
 
 const { messenger, firstEntity } = messengerService;
 
@@ -25,7 +25,11 @@ class WebHookController {
   static verify(req, res) {
     caller();
     log.info('verifiying');
-    console.log('verifying', req.query['hub.verify_token'], config.get('verify_token'));
+    console.log(
+      'verifying',
+      req.query['hub.verify_token'],
+      config.get('verify_token')
+    );
     if (req.query['hub.verify_token'] === config.get('verify_token')) {
       log.info('TOKEN VERIFIED');
       res.send(req.query['hub.challenge']);
@@ -34,12 +38,11 @@ class WebHookController {
 
   static async webhook(req, res) {
     try {
-      this.caller();
       res.status(200).send('okay');
       const { entry } = req.body;
       const { messaging } = entry[0];
       messaging.map(async event => {
-        const fbid = event.senderService.id;
+        const fbid = event.sender.id;
         const user = await userModel
           .findOrCreate(fbid, {
             fbid: 1,
@@ -61,7 +64,7 @@ class WebHookController {
         if (user.error) {
           return;
         }
-        this.eventDetector(user, event);
+        WebHookController.eventDetector(user, event);
       });
       return true;
     } catch (err) {
@@ -72,7 +75,6 @@ class WebHookController {
 
   // eslint-disable-next-line consistent-return
   static async eventDetector(user, event) {
-    this.caller();
     log.info('the user in event detector', user);
     const { message, postback, referral } = event;
     if (message) {
@@ -86,7 +88,7 @@ class WebHookController {
       } else if (text) {
         const { nlp } = message;
         if (user.step) {
-          this.checkForInput(user, text);
+          WebHookController.checkForInput(user, text);
         } else if (nlp) {
           log.info('the nlp', nlp, nlp.entities[Object.keys(nlp.entities)]);
           const greetings = firstEntity(nlp, 'Greetings');
@@ -97,14 +99,14 @@ class WebHookController {
           }
           // handleEntity();
         } else {
-          console.log('a text message ee ')
-          texts.receivedTextMessage(user, event);
+          console.log('a text message ee ');
+          TextsReceiver.router(user, event);
           // sendNotUnderstanding(user);
         }
       }
     } else if (postback) {
       logger.info(
-        `Postback Check! senderId: ${event.senderService.id}; payload: ${event.postback.payload}`
+        `Postback Check! senderId: ${event.sender.id}; payload: ${event.postback.payload}`
       );
       postBacks.receivedPostback(user, event);
     } else if (referral) {
@@ -133,7 +135,7 @@ class WebHookController {
 
   static async checkForInput(user, text) {
     if (user.step == 'phone') {
-      let response = await this.validatePhoneNumber(text);
+      let response = await WebHookController.validatePhoneNumber(text);
       if (response.success && response.success == true) {
         log.info('Results', response.result.valid);
         if (response.result.valid == true) {
