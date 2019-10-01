@@ -6,8 +6,8 @@ const senderService = require('../services/senderService');
 const { userModel } = require('../model');
 const { messengerService } = require('../services/messenger');
 
-const { postBacks } = require('./postBacks');
-const { quickReplies } = require('./quickReplies');
+const PostBackReceiver = require('../services/receivers/postBackReceiver');
+const QuickReplyReceiver = require('../services/receivers/quickReplyReceiver');
 const TextsReceiver = require('../services/receivers/textsReceiver');
 
 const { messenger, firstEntity } = messengerService;
@@ -84,7 +84,7 @@ class WebHookController {
         log.info('QUICK REPLY CHECK');
         log.info('Quick Reply is', JSON.stringify(event.message.quick_reply));
         const { payload } = quickReply;
-        quickReplies.receivedQuickReply(user, payload);
+        QuickReplyReceiver.router(user, event);
       } else if (text) {
         const { nlp } = message;
         if (user.step) {
@@ -108,10 +108,10 @@ class WebHookController {
       logger.info(
         `Postback Check! senderId: ${event.sender.id}; payload: ${event.postback.payload}`
       );
-      postBacks.receivedPostback(user, event);
+      PostBackReceiver.router(user, event);
     } else if (referral) {
       log.info('referral CHECK', event.referral.ref);
-      postBacks.receivedReferral(user, event);
+      // postBacks.receivedReferral(user, event);
     } else {
       log.info('received unknown event', event);
     }

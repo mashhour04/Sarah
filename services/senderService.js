@@ -3,7 +3,14 @@ class SenderService {
   static sendGreetingMessage(user) {
     console.log('sending greeting');
     const text = 'Ola';
-    messengerService.sendTextMessage(user.fbid, text);
+    const quickReplies = [
+      {
+        content_type: 'text',
+        title: 'Configure Sarah',
+        payload: JSON.stringify({ action: 'configure_sarah' })
+      }
+    ];
+    messengerService.sendQuickRepliesMessage(user.fbid, text, quickReplies)
   }
 }
 

@@ -61,6 +61,10 @@ class Messenger {
     return messenger.sendTextMessage({ id, text });
   }
 
+  sendQuickRepliesMessage(id, text, quickReplies) {
+    console.log('sending gfreeting with text', text);
+    return messenger.sendQuickRepliesMessage({ id, text, quickReplies });
+  }
   // CallsendAPI for messages
 }
 
