@@ -8,6 +8,7 @@ const { messengerService } = require('../services/messenger');
 
 const { postBacks } = require('./postBacks');
 const { quickReplies } = require('./quickReplies');
+const texts = require('../services/texts');
 
 const { messenger, firstEntity } = messengerService;
 
@@ -24,7 +25,7 @@ class WebHookController {
   static verify(req, res) {
     caller();
     log.info('verifiying');
-    console.log('verifying');
+    console.log('verifying', req.query['hub.verify_token'], config.get('verify_token'));
     if (req.query['hub.verify_token'] === config.get('verify_token')) {
       log.info('TOKEN VERIFIED');
       res.send(req.query['hub.challenge']);
@@ -33,7 +34,6 @@ class WebHookController {
 
   static async webhook(req, res) {
     try {
-      console.log('webhook event received')
       this.caller();
       res.status(200).send('okay');
       const { entry } = req.body;
@@ -97,7 +97,8 @@ class WebHookController {
           }
           // handleEntity();
         } else {
-          //receivedTextMessage(user, event);
+          console.log('a text message ee ')
+          texts.receivedTextMessage(user, event);
           // sendNotUnderstanding(user);
         }
       }
