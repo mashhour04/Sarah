@@ -2,7 +2,7 @@
     "server_url": "https://aliboardserver.herokuapp.com",
     "mongodb": "mongodb://localhost:27017/sarah",
     "facebookAccessToken": "EAACNynhTBT0BAPZCZAqxmGhEN3AAjGxZCZBYXmQhIZBjTFhbL6pGZBTkeOSrznTVQEaJokhr8OrEZAGmuoTksAmgpVRNOC6HfK5t1irJPDOtkJRhktOsFNF2LFDOB7n42n1rcCo6fIxCaLMSyMrbgioYjiOmMpXf53qK6fdWixsXAZDZD",
-    "facebookGroupAPIToken": "EAAieW3vdsNsBAPFJBf0WgRQIcgrtL8jrXGN70C1N4yWoCZAA2eZCLEzyJDaxaBu3NwrvcHzrQbDJMEg7nTUdfXyns63T9IJftmV7CsCs2aKtRh3a84nFMucs6BSOFk93mZAK0lawANnd5CMvXIzm3E2rkJaZCghkJhhZBYOxkDZAp4qdvfZC886M6tSBqeNHjZC2wAGbZBamOSAZDZD",
+    "facebookGroupAPIToken": "EAAieW3vdsNsBAIewarLNqN14oxnlH4OK6OsNNNZC1dhlOW7e4yl2jdGHM8iRDW2FRRAKHZBwPBFCWhOj41XNO0DfZBktEjBeytFaGmMUScg0XgzRRsPpZCFf8XuqhuKJKD7mY4pATZAChfup3cwaOAG4apMPlKN78QtjZB0RsYdgZDZD",
     "verify_token": "sarah",
     "callbackURL": "https://acfcae20.ngrok.io/auth/facebook/callback",
     "FACEBOOK_APP_ID": "2425915571024091",

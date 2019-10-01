@@ -2,9 +2,9 @@ const log = require('npmlog');
 const config = require('config');
 const phoneValidation = require('phone-number-validation');
 
-const { senders } = require('../constants');
-const { userModel } = require('../../model');
-const { messengerService } = require('../../services/messenger');
+const senderService = require('../services/senderService');
+const { userModel } = require('../model');
+const { messengerService } = require('../services/messenger');
 
 const { postBacks } = require('./postBacks');
 const { quickReplies } = require('./quickReplies');
@@ -15,28 +15,31 @@ const validationAPI = new phoneValidation({
   access_key: 'bd802393d1e2cd2f7e56744f23162ce2'
 });
 
-class Webhook {
+const caller = () => true;
+class WebHookController {
   constructor() {
-    this.caller = () => true;
+    caller = () => true;
   }
 
-  verify(req, res) {
-    this.caller();
+  static verify(req, res) {
+    caller();
     log.info('verifiying');
+    console.log('verifying');
     if (req.query['hub.verify_token'] === config.get('verify_token')) {
       log.info('TOKEN VERIFIED');
       res.send(req.query['hub.challenge']);
     }
   }
 
-  async webhook(req, res) {
+  static async webhook(req, res) {
     try {
+      console.log('webhook event received')
       this.caller();
       res.status(200).send('okay');
       const { entry } = req.body;
       const { messaging } = entry[0];
       messaging.map(async event => {
-        const fbid = event.sender.id;
+        const fbid = event.senderService.id;
         const user = await userModel
           .findOrCreate(fbid, {
             fbid: 1,
@@ -68,7 +71,7 @@ class Webhook {
   }
 
   // eslint-disable-next-line consistent-return
-  async eventDetector(user, event) {
+  static async eventDetector(user, event) {
     this.caller();
     log.info('the user in event detector', user);
     const { message, postback, referral } = event;
@@ -90,7 +93,7 @@ class Webhook {
           log.info('if gereetings ', greetings);
           if (!greetings) {
             log.info('user', user);
-            return senders.sendAliWelcome(user.fbid);
+            return senderService.sendAliWelcome(user.fbid);
           }
           // handleEntity();
         } else {
@@ -100,7 +103,7 @@ class Webhook {
       }
     } else if (postback) {
       logger.info(
-        `Postback Check! senderId: ${event.sender.id}; payload: ${event.postback.payload}`
+        `Postback Check! senderId: ${event.senderService.id}; payload: ${event.postback.payload}`
       );
       postBacks.receivedPostback(user, event);
     } else if (referral) {
@@ -111,7 +114,7 @@ class Webhook {
     }
   }
 
-  async validatePhoneNumber(number) {
+  static async validatePhoneNumber(number) {
     return new Promise((resolve, reject) => {
       var query = {
         number: number
@@ -127,7 +130,7 @@ class Webhook {
     });
   }
 
-  async checkForInput(user, text) {
+  static async checkForInput(user, text) {
     if (user.step == 'phone') {
       let response = await this.validatePhoneNumber(text);
       if (response.success && response.success == true) {
@@ -138,7 +141,7 @@ class Webhook {
         }
         user.step = null;
         await user.save();
-        await senders.sendAliWelcome(user.fbid, true);
+        await senderService.sendAliWelcome(user.fbid, true);
       } else {
         user.step = null;
         await user.save();
@@ -147,4 +150,4 @@ class Webhook {
   }
 }
 
-module.exports = { webHookController: new Webhook() };
+module.exports = WebHookController;

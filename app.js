@@ -30,6 +30,7 @@ app.use(logger('combined'));
 app.use(cors());
 
 const { apiRouter } = require('./routes/api/apiRouter');
+const { webHookRouter } =require('./routes/webHookRouter');
 
 passport.use(
   new Strategy(async (username, password, cb) => {
@@ -169,6 +170,12 @@ app.get(
     console.log('callback', req.user)
     res.redirect('/');
   }
+);
+
+
+app.use(
+  '/webhook',
+  webHookRouter.getRouter
 );
 
 app.use(
