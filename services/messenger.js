@@ -63,7 +63,11 @@ class Messenger {
 
   sendQuickRepliesMessage(id, text, quickReplies) {
     console.log('sending gfreeting with text', text);
-    return messenger.sendQuickRepliesMessage({ id, text, quickReplies });
+    return messenger.sendQuickRepliesMessage({
+      id,
+      attachment: text,
+      quickReplies
+    });
   }
   // CallsendAPI for messages
 }
