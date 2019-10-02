@@ -18,11 +18,19 @@ class QuickReplyReceiver {
   TRAIN_THE_BOT_BLACK_LIST
   TRAIN_THE_BOT_WHITE_LIST
     */
-    QuickReplyReceiver.receivedGreetingMessage(user, event);
+    else QuickReplyReceiver.receivedGreetingMessage(user, event);
   }
 
   static receivedGreetingMessage(user, event) {
     senderService.sendGreetingMessage(user);
+  }
+  static async receivedPostType(user, event) {
+    const session = user.session || {};
+    session.step = configConstants.PERCENTAGE_OF_CONFIDENCE;
+    user.markModified('session');
+    await user.save();
+    const message = 'can you enter PERCENTAGE OF CONFIDENCE ?'
+    senderService.sendConfidence(user, message);
   }
 }
 

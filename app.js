@@ -9,6 +9,8 @@ const log = require('npmlog');
 const multer = require('multer');
 const passport = require('passport');
 
+const _ = require('lodash');
+
 const jwt = require('jsonwebtoken');
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');

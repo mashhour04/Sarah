@@ -89,15 +89,15 @@ class WebHookController {
         const { nlp } = message;
         if (user.step) {
           WebHookController.checkForInput(user, text);
-        } else if (nlp) {
-          log.info('the nlp', nlp, nlp.entities[Object.keys(nlp.entities)]);
-          const greetings = firstEntity(nlp, 'Greetings');
-          log.info('if gereetings ', greetings);
-          if (!greetings) {
-            log.info('user', user);
-            return senderService.sendAliWelcome(user.fbid);
-          }
-          // handleEntity();
+        // } else if (nlp) {
+        //   log.info('the nlp', nlp, nlp.entities[Object.keys(nlp.entities)]);
+        //   const greetings = firstEntity(nlp, 'Greetings');
+        //   log.info('if gereetings ', greetings);
+        //   if (!greetings) {
+        //     log.info('user', user);
+        //     return senderService.sendAliWelcome(user.fbid);
+        //   }
+        //   // handleEntity();
         } else {
           console.log('a text message ee ');
           TextsReceiver.router(user, event);
