@@ -7,34 +7,5 @@
     "callbackURL": "https://acfcae20.ngrok.io/auth/facebook/callback",
     "FACEBOOK_APP_ID": "2425915571024091",
     "FACEBOOK_APP_SECRET": "ef9a5d299bfcd04f1ef7207e9e7fad4d",
-    "local": true,
-    "defaultPostFields": [
-        {
-            "name": "attachments",
-            "children": [
-                "description",
-                "description_tags",
-                "media",
-                "media_type",
-                "url",
-                "subattachments"
-            ]
-        },
-        {
-            "name": "created_time",
-            "children": []
-        },
-        {
-            "name": "description",
-            "children": []
-        },
-        {
-            "name": "message",
-            "children": []
-        },
-        {
-            "name": "is_hidden",
-            "children": []
-        }
-    ]
+    "local": true
 }
