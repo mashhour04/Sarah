@@ -1,10 +1,6 @@
-const Test = require('./test');
+const PostsCollector = require('./posts');
 
-// Test.getPosts().then(res => {
-
-// }).catch(err => {
-//     console.log('error getting posts', err.message)
-// })
+PostsCollector.init()
 module.exports = { 
-    Test
+    PostsCollector
 }
