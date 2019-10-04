@@ -9,7 +9,6 @@ const log = require('npmlog');
 const multer = require('multer');
 const passport = require('passport');
 
-const _ = require('lodash');
 
 const jwt = require('jsonwebtoken');
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -18,13 +17,16 @@ const { Strategy } = require('passport-local');
 const FacebookStrategy = require('passport-facebook');
 
 const { adminModel } = require('./model');
-const collector = require('./services/collector')
+
+const collector = require('./services/collector');
+
+collector.init();
+
 
 require('dotenv').config();
 
 const app = express();
 const uploads = multer({ dest: 'uploads/' });
-const { ensure } = require('./services/ensure');
 
 app.use(logger('combined'));
 
@@ -32,7 +34,7 @@ app.use(logger('combined'));
 app.use(cors());
 
 const { apiRouter } = require('./routes/api/apiRouter');
-const { webHookRouter } =require('./routes/webHookRouter');
+const { webHookRouter } = require('./routes/webHookRouter');
 
 passport.use(
   new Strategy(async (username, password, cb) => {
@@ -62,12 +64,12 @@ passport.use(
       clientSecret: config.get('FACEBOOK_APP_SECRET'),
       callbackURL: config.get('callbackURL')
     },
-    function(accessToken, refreshToken, profile, cb) {
-      adminModel.findOrCreate({ facebookId: profile.id, profile, accessToken, refreshToken }, function(
+    function (accessToken, refreshToken, profile, cb) {
+      adminModel.findOrCreate({ facebookId: profile.id, profile, accessToken, refreshToken }, function (
         err,
         user
       ) {
-        if(err) {
+        if (err) {
           console.log('error happened in passport facebook', err.message)
         }
         return cb(err, user);
@@ -80,7 +82,7 @@ const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = 'SecretKeyOne';
 passport.use(
-  new JwtStrategy(opts, async (jwt_payload, done) => {
+  new JwtStrategy(opts, async () => {
     //TODO
     // log.info('authenticating with jwt', jwt_payload.username);
     // const user = await userModel.findByUsername(jwt_payload.username);
@@ -91,9 +93,9 @@ passport.use(
   })
 );
 
-passport.serializeUser((user, cb) => {});
+passport.serializeUser(() => { });
 
-passport.deserializeUser(async (identifiers, cb) => {});
+passport.deserializeUser(async () => { });
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('uploads'));
@@ -139,7 +141,7 @@ app.get('/failure', (req, res) => {
   });
 });
 
-app.post('/avatar', uploads.single('avatar'), (req, res, next) => {
+app.post('/avatar', uploads.single('avatar'), (req) => {
   console.log('the file', req.file);
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
@@ -162,12 +164,12 @@ app.post(
   loginHandler
 );
 
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['groups_access_member_info', 'publish_to_groups']  }));
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['groups_access_member_info', 'publish_to_groups'] }));
 
 app.get(
   '/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login'}),
-  function(req, res) {
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function (req, res) {
     // Successful authentication, redirect home.
     console.log('callback', req.user)
     res.redirect('/');

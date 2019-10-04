@@ -16,48 +16,55 @@ const { messengerService } = require('../services/messenger');
 const { messenger } = messengerService;
 
 
-const userSchema = new Schema({
+const contentSchema = new Schema({
+  from: {
+    name: String,
+    id: String,
+  },
+  created_time: {
+    type: Date,
+    default: Date.now,
+  },
+  updated_time: {
+    type: Date,
+    default: Date.now,
+  },
+
+  description: String,
+  text: String,
+  story: String,
+  message: String,
+  is_hidden: Boolean,
+  id: {
+    type: String,
+    index: 1,
+  },
+
+
   fbid: {
     type: String,
-    index: 1
+    index: 1,
   },
+  full_picture: String,
+  attachments: [{
+    media_type: String,
+    url: String,
+    description: String,
+    media: {
+      type: Schema.Types.Mixed,
+    },
+    subattachments: [{
+      media: {
+        type: Schema.Types.Mixed,
+      },
+    }],
+  }],
 
-  firstName: {
-    type: String
-  },
-
-  lastName: {
-    type: String
-  },
-
-  email: {
-    type: String
-  },
-
-  phone: {
-    type: Number
-  },
-
-  gender: {
-    type: String
-  },
-
-  locale: {
-    type: String
-  },
-  session: {
-    type: Schema.Types.Mixed,
-    default: {}
-  },
-  
   createdAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now(),
   },
 
-  step: {
-    type: String
-  }
 });
 
 
