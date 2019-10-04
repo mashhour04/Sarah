@@ -15,14 +15,16 @@ const apiKey = config.get('wit_key');
 
 const client = new Wit({ accessToken: apiKey, logger: new log.Logger(log.DEBUG) });
 
-createExpressions({ expressions });
+// createExpressions();
 
+createSamples({});
 
 async function createExpression({ entity, value, expression }) {
   entity = entity || 'intent';
   value = value || 'profane';
-  const url = `https://api.wit.ai/entities/${entity}/values/${value}/expressions?v=2019092`;
+  const url = `https://api.wit.ai/entities/${entity}/values/${value}/expressions?v=2019104`;
 
+  console.log('url', url);
   try {
     const response = await axios.post(url, { expression }, {
       headers: {
@@ -42,7 +44,30 @@ async function createExpression({ entity, value, expression }) {
   }
 }
 
-async function createExpressions({ expressions }) {
+
+async function insertSamples({ samples }) {
+  const url = 'https://api.wit.ai/samples?v=2019104';
+
+  try {
+    const response = await axios.post(url, samples, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    });
+
+    if (response.data) {
+      const entities = response.data;
+      console.log('response for', samples);
+      return { entities, expression: samples };
+    }
+    return response;
+  } catch (err) {
+    console.log('error in request', err);
+    return { error: err.response };
+  }
+}
+
+async function createExpressions() {
   const chunks = _.chunk(expressions, 20);
   for (let i = 0; i < chunks.length; i += 1) {
     const chunk = chunks[i];
@@ -53,12 +78,12 @@ async function createExpressions({ expressions }) {
       // console.log('expression', expression)
       if (!expression) { continue; }
 
-      trainPromises.push(createExpression({ expression }));
-      messagePromises.push(messageWit({ expression }));
+      trainPromises.push(createSample({ sample: expression }));
+      // messagePromises.push(messageWit({ expression }));
     }
 
     const train = await Promise.all(trainPromises);
-    const message = await Promise.all(messagePromises);
+    // const message = await Promise.all(messagePromises);
 
 
     train.map(async (response) => {
@@ -70,10 +95,45 @@ async function createExpressions({ expressions }) {
       }
     });
     // command to print out a 50
-    jsonfile.writeFileSync(path.resolve(`./services/data/train-response-${i}.json`), train, { encoding: 'utf-8' });
-    jsonfile.writeFileSync(path.resolve(`./services/data/message-response-${i}.json`), message, { encoding: 'utf-8' });
+    jsonfile.writeFileSync(path.resolve(`./services/data/second-train-response-${i}.json`), train, { encoding: 'utf-8' });
+    //    jsonfile.writeFileSync(path.resolve(`./services/data/message-response-${i}.json`), message, { encoding: 'utf-8' });
 
     await delay(5000);
+  }
+}
+
+async function createSamples({ entity, value }) {
+  const chunks = _.chunk(expressions, 20);
+  entity = entity || 'intent';
+  value = value || 'profane';
+  for (let i = 0; i < chunks.length; i += 1) {
+    const chunk = chunks[i];
+    const samples = chunk.map((text) => ({
+      text,
+      entities: [{
+        entity,
+        value,
+      }],
+    }));
+    const trainPromises = [];
+    const messagePromises = [];
+
+    const train = await insertSamples({ samples });
+    // const message = await Promise.all(messagePromises);
+
+
+    if (train.error) {
+      console.log('failed for ', train, 'with error', train.error);
+      process.exit();
+    } else {
+      console.log('sucess for ', train);
+    }
+
+    // command to print out a 50
+    jsonfile.writeFileSync(path.resolve(`./services/data/second-train-response-${i}.json`), train, { encoding: 'utf-8' });
+    //    jsonfile.writeFileSync(path.resolve(`./services/data/message-response-${i}.json`), message, { encoding: 'utf-8' });
+
+    await delay(10000);
   }
 }
 
