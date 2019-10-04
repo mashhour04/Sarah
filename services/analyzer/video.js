@@ -1,8 +1,11 @@
 const config = require('config');
-const Vindexer = require('video-indexer');
+const cognitiveServices = require('cognitive-services');
 
-const vindexer = new Vindexer(config.get('video_indexer_key'));
+const apiKey = config.get('cognitiveServices_api_key');
+const endpoint = config.get('cognitiveServices_endpoint');
 
-// Get user id and name associated with API Key
-vindexer.getAccounts()
-  .then((result) => { console.log (result.body) });
+const contentModerator = new cognitiveServices.contentModerator({
+  apiKey,
+  endpoint,
+});
+
