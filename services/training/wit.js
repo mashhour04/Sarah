@@ -9,13 +9,14 @@ const path = require('path');
 const jsonfile = require('jsonfile');
 const { Wit, log } = require('node-wit');
 const expressions = require('../../black-list.json');
-
+const tweets = require('../../training/data-json/tweets.json');
+const AljComments = require('../../training/data-json/ALJComments.json');
 
 const apiKey = config.get('wit_key');
 
 const client = new Wit({ accessToken: apiKey, logger: new log.Logger(log.DEBUG) });
 
-// createExpressions();
+// createExpressions(tweets);
 
 createSamples({});
 
@@ -26,11 +27,15 @@ async function createExpression({ entity, value, expression }) {
 
   console.log('url', url);
   try {
-    const response = await axios.post(url, { expression }, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
+    const response = await axios.post(
+      url,
+      { expression },
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
       },
-    });
+    );
 
     if (response.data) {
       const entities = response.data;
@@ -43,7 +48,6 @@ async function createExpression({ entity, value, expression }) {
     return { error: err.response };
   }
 }
-
 
 async function insertSamples({ samples }) {
   const url = 'https://api.wit.ai/samples?v=2019104';
@@ -67,24 +71,20 @@ async function insertSamples({ samples }) {
   }
 }
 
-async function createExpressions() {
-  const chunks = _.chunk(expressions, 20);
+async function createExpressions(data) {
+  const chunks = _.chunk(data, 20);
   for (let i = 0; i < chunks.length; i += 1) {
     const chunk = chunks[i];
     const trainPromises = [];
-    const messagePromises = [];
     for (let j = 0; j < chunk.length; j += 1) {
-      const expression = expressions[j];
+      const expression = chunk[j];
       // console.log('expression', expression)
-      if (!expression) { continue; }
+      if (!expression) continue;
 
-      trainPromises.push(createSample({ sample: expression }));
-      // messagePromises.push(messageWit({ expression }));
+      trainPromises.push(createExpression({ expression: expression.text, value: expression.type }));
     }
 
     const train = await Promise.all(trainPromises);
-    // const message = await Promise.all(messagePromises);
-
 
     train.map(async (response) => {
       if (response.error) {
@@ -95,8 +95,9 @@ async function createExpressions() {
       }
     });
     // command to print out a 50
-    jsonfile.writeFileSync(path.resolve(`./services/data/second-train-response-${i}.json`), train, { encoding: 'utf-8' });
-    //    jsonfile.writeFileSync(path.resolve(`./services/data/message-response-${i}.json`), message, { encoding: 'utf-8' });
+    jsonfile.writeFileSync(path.resolve(`./services/data/second-train-response-${i}.json`), train, {
+      encoding: 'utf-8',
+    });
 
     await delay(5000);
   }
@@ -110,17 +111,20 @@ async function createSamples({ entity, value }) {
     const chunk = chunks[i];
     const samples = chunk.map((text) => ({
       text,
-      entities: [{
-        entity,
-        value,
-      }],
+      entities: [
+        {
+          entity,
+          value,
+          start: 0,
+          end: value.length,
+        },
+      ],
     }));
     const trainPromises = [];
     const messagePromises = [];
 
     const train = await insertSamples({ samples });
     // const message = await Promise.all(messagePromises);
-
 
     if (train.error) {
       console.log('failed for ', train, 'with error', train.error);
@@ -130,13 +134,14 @@ async function createSamples({ entity, value }) {
     }
 
     // command to print out a 50
-    jsonfile.writeFileSync(path.resolve(`./services/data/second-train-response-${i}.json`), train, { encoding: 'utf-8' });
+    jsonfile.writeFileSync(path.resolve(`./services/data/second-train-response-${i}.json`), train, {
+      encoding: 'utf-8',
+    });
     //    jsonfile.writeFileSync(path.resolve(`./services/data/message-response-${i}.json`), message, { encoding: 'utf-8' });
 
     await delay(10000);
   }
 }
-
 
 async function messageWit({ expression }) {
   try {
@@ -148,9 +153,13 @@ async function messageWit({ expression }) {
 }
 async function delay(amount, ...args) {
   return new Promise((resolve, reject) => {
-    setTimeout((...args) => {
-      resolve(...args);
-    }, amount, ...args);
+    setTimeout(
+      (...args) => {
+        resolve(...args);
+      },
+      amount,
+      ...args,
+    );
   });
 }
 
@@ -168,8 +177,12 @@ async function email({ vehicle, total, index }) {
       pass: testAccount.pass, // generated ethereal password
     },
   });
-  const subject = (vehicle) ? `End Vehicle:  ${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.body} ✔` : `${index}  Total of Vehicles`;
-  const text = (vehicle) ? `Vehicle: ${JSON.stringify(vehicle)}` : `${index} Total : ${JSON.stringify(total)} `;
+  const subject = vehicle
+    ? `End Vehicle:  ${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.body} ✔`
+    : `${index}  Total of Vehicles`;
+  const text = vehicle
+    ? `Vehicle: ${JSON.stringify(vehicle)}`
+    : `${index} Total : ${JSON.stringify(total)} `;
   // send mail with defined transport object
   const info = await transporter.sendMail({
     from: '"Wit.AI Training  👻" <mpghknown9@gmail.com>', // sender address

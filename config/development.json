@@ -10,7 +10,7 @@
   "video_indexer_key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJBY2NvdW50SWQiOiI0YWJjMjMwZi02ZTI3LTQ5ZDgtOTA5Zi1jYjk4Njk4NzM4ZGIiLCJBbGxvd0VkaXQiOiJUcnVlIiwiRXh0ZXJuYWxVc2VySWQiOiI5MzQ2RDQxQkYwMjc0NzEyQjRFQzY2MUJCM0I1NDcyRCIsIlVzZXJUeXBlIjoiTWljcm9zb2Z0Q29ycEFhZCIsImlzcyI6Imh0dHBzOi8vd3d3LnZpZGVvaW5kZXhlci5haS8iLCJhdWQiOiJodHRwczovL3d3dy52aWRlb2luZGV4ZXIuYWkvIiwiZXhwIjoxNTcwMjI4MTU0LCJuYmYiOjE1NzAyMjQyNTR9.dyNwAQ5ifSvoAutnyS0R2OnI37qv8PEJufAEvfL0bgQ",
   "cognitiveServices_api_key": "422fe2364fc447abb4cb688c0abbf619",
   "endpoint": "https://sarah.cognitiveservices.azure.com/contentmoderator",
-  "wit_key": "FHQSP56YJI2H7WOBDT5R4EFQQSZ5N6OS",
+  "wit_key": "WFBDSWTULUY45OLSGHH4ASHY32NNEYXZ",
   "defaultPostFields": [
     {
       "name": "attachments",
