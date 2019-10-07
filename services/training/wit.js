@@ -146,14 +146,15 @@ async function createSamples({ entity, value }) {
   }
 }
 
-async function messageWit({ expression }) {
+module.exports.messageWit = async ({ expression }) => {
   try {
     const data = await client.message(expression);
     return data;
   } catch (err) {
     return err;
   }
-}
+};
+
 async function delay(amount, ...args) {
   return new Promise((resolve, reject) => {
     setTimeout(
