@@ -1,4 +1,4 @@
-// { data: 
+// { data:
 //     [ { message: 'A7a',
 //         updated_time: '2019-09-30T18:59:33+0000',
 //         id: '392352701458597_392356124791588' },
@@ -15,8 +15,13 @@ const { messengerService } = require('../services/messenger');
 
 const { messenger } = messengerService;
 
-
 const contentSchema = new Schema({
+  status: {
+    type: String,
+    enum: ['pending', 'clean', 'bad', 'approved', 'confirmed_bad'],
+    default: 'pending',
+  },
+  parents: [String],
   from: {
     name: String,
     id: String,
@@ -40,32 +45,33 @@ const contentSchema = new Schema({
     index: 1,
   },
 
-
   fbid: {
     type: String,
     index: 1,
   },
   full_picture: String,
-  attachments: [{
-    media_type: String,
-    url: String,
-    description: String,
-    media: {
-      type: Schema.Types.Mixed,
-    },
-    subattachments: [{
+  attachments: [
+    {
+      media_type: String,
+      url: String,
+      description: String,
       media: {
         type: Schema.Types.Mixed,
       },
-    }],
-  }],
+      subattachments: [
+        {
+          media: {
+            type: Schema.Types.Mixed,
+          },
+        },
+      ],
+    },
+  ],
 
   createdAt: {
     type: Date,
     default: Date.now(),
   },
-
 });
-
 
 module.exports = contentSchema;

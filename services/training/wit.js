@@ -8,6 +8,7 @@ const path = require('path');
 
 const jsonfile = require('jsonfile');
 const { Wit, log } = require('node-wit');
+const fs = require('fs');
 const expressions = require('../../black-list.json');
 const tweets = require('../../training/data-json/tweets.json');
 const AljComments = require('../../training/data-json/ALJComments.json');
@@ -106,7 +107,7 @@ async function createExpressions(data) {
 async function createSamples({ entity, value }) {
   const chunks = _.chunk(expressions, 20);
   entity = entity || 'intent';
-  value = value || 'profane';
+  value = value || `profane${Math.floor(Math.random() * 10000)}`;
   for (let i = 0; i < chunks.length; i += 1) {
     const chunk = chunks[i];
     const samples = chunk.map((text) => ({
@@ -114,7 +115,7 @@ async function createSamples({ entity, value }) {
       entities: [
         {
           entity,
-          value,
+          value: `profane_${Math.floor(Math.random() * 50)}`,
           start: 0,
           end: value.length,
         },
@@ -134,10 +135,12 @@ async function createSamples({ entity, value }) {
     }
 
     // command to print out a 50
+    if (!fs.existsSync('services/data')) fs.mkdirSync('services/data');
     jsonfile.writeFileSync(path.resolve(`./services/data/second-train-response-${i}.json`), train, {
       encoding: 'utf-8',
     });
-    //    jsonfile.writeFileSync(path.resolve(`./services/data/message-response-${i}.json`), message, { encoding: 'utf-8' });
+    // jsonfile.writeFileSync(path.resolve(`./services/data/message-response-${i}.json`),
+    //  message, { encoding: 'utf-8' });
 
     await delay(10000);
   }
