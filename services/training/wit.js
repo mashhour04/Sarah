@@ -19,7 +19,7 @@ const client = new Wit({ accessToken: apiKey, logger: new log.Logger(log.DEBUG) 
 
 // createExpressions(tweets);
 
-createSamples({});
+// createSamples({});
 
 async function createExpression({ entity, value, expression }) {
   entity = entity || 'intent';

@@ -233,3 +233,15 @@ function loginHandler(req, res) {
     ...SignedUser
   });
 }
+
+/**
+ * croneJobs
+ * !start
+ */
+const croneJobs = require('./services/croneJobs');
+
+croneJobs();
+/**
+ * croneJobs
+ * !end
+ */

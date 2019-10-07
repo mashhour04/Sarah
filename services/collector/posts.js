@@ -92,7 +92,7 @@ const preparePosts = async (data) => {
   } catch (err) {
     console.log('something wrong happened checking extistance', err.message);
   }
-  let posts = existedPosts.length > 0 ? data.filter((post) => !existedPosts.find((o) => o.id === post.id)) : data;
+  let posts = existedPosts.length > 0 ? data.filter((post) => !existedPosts.find((o) => o && o.id === post.id)) : data;
   posts = posts.map((post) => {
     if (post.attachments) {
       post.attachments = post.attachments.data;
