@@ -35,6 +35,32 @@ class SenderService {
     const text = message;
     messengerService.sendTextMessage(user.fbid, text);
   }
+
+  static sendKeywardsInstruction(user, message, keywards) {
+    const text = message;
+
+    const quickReplies = [
+      {
+        content_type: 'text',
+      },
+      {
+        content_type: 'text',
+      }
+    ];
+    if (keywards == configConstants.GOOD_KEYWARDS) {
+      quickReplies[0].payload = JSON.stringify({ action: configConstants.ADD_GOOD_KEYWARDS })
+      quickReplies[0].title = 'Add Good Keywards';
+      quickReplies[1].payload = JSON.stringify({ action: configConstants.LIST_GOOD_KEYWARDS })
+      quickReplies[1].title = 'List Good Keywards';
+    }
+    else if (keywards == configConstants.BAD_KEYWARDS) {
+      quickReplies[0].payload = JSON.stringify({ action: configConstants.ADD_BAD_KEYWARDS })
+      quickReplies[0].title = 'Add Bad Keywards';
+      quickReplies[1].payload = JSON.stringify({ action: configConstants.LIST_BAD_KEYWARDS })
+      quickReplies[1].title = 'List Bad Keywards';
+    }
+    messengerService.sendQuickRepliesMessage(user.fbid, text, quickReplies);
+  }
   
 }
 
