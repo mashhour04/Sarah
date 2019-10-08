@@ -9,6 +9,7 @@ class TextsReceiver {
     const { text } = message;
     const session = user.session || {};
     const { step } = session;
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa', step);
     // if(_.isNaN(Number(text))) console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     if (new RegExp('hi', 'i').test(text)) {
       TextsReceiver.receivedGreetingMessage(user, event);

@@ -20,6 +20,8 @@ const { adminModel } = require('./model');
 
 const collector = require('./services/collector');
 
+global._ = require('lodash');
+
 collector.init();
 
 
