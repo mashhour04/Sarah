@@ -11,6 +11,7 @@
   "cognitiveServices_api_key": "422fe2364fc447abb4cb688c0abbf619",
   "endpoint": "https://sarah.cognitiveservices.azure.com/contentmoderator",
   "wit_key": "CF6TTA6VMPTGVJBSPZNOGKZUEAI3SOSG",
+  "default_threadId": "2469592233117116",
   "defaultPostFields": [
     {
       "name": "attachments",

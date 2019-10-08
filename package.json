@@ -32,6 +32,7 @@
     "express-paginate": "^1.0.0",
     "express-session": "^1.11.3",
     "express-validator": "^5.3.0",
+    "facebook-chat-api": "^1.6.1",
     "fb-messenger": "^2.3.1",
     "fbgraph": "^1.4.4",
     "http": "0.0.0",
