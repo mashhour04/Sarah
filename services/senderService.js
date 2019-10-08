@@ -2,6 +2,24 @@ const { messengerService } = require('./messenger');
 const configConstants = require('./constants/configConstants');
 
 class SenderService {
+
+  static sendDoneQuestionMessage(user) {
+    const text = 'Are You Done ?';
+    const quickReplies = [
+      {
+        content_type: 'text',
+        title: 'Yes',
+        payload: JSON.stringify({ action: configConstants.DONE_ADDING_KEYWORDS })
+      },
+      {
+        content_type: 'text',
+        title: 'No',
+        payload: JSON.stringify({ action: configConstants.NOT_DONE_ADDING_KEYWORDS })
+      }
+    ];
+    messengerService.sendQuickRepliesMessage(user.fbid, text, quickReplies);
+  }
+
   static sendGreetingMessage(user) {
     console.log('sending greeting');
     const text = 'Hi';
@@ -36,6 +54,11 @@ class SenderService {
     messengerService.sendTextMessage(user.fbid, text);
   }
 
+  static sendDoneResponse(user, message) {
+    const text = message;
+    messengerService.sendTextMessage(user.fbid, text);
+  }
+
   static sendGoodKeywordsInstruction(user, message) {
     console.log('sending adding Good Keywords Instruction');
     const text = message;
@@ -59,18 +82,19 @@ class SenderService {
         content_type: 'text',
       }
     ];
-    if (keywords == configConstants.GOOD_KEYWords) {
-      quickReplies[0].payload = JSON.stringify({ action: configConstants.ADD_GOOD_KEYWords })
+    if (keywords == configConstants.GOOD_KEYWORDS) {
+      quickReplies[0].payload = JSON.stringify({ action: configConstants.ADD_GOOD_KEYWORDS })
       quickReplies[0].title = 'Add Good Keywords';
-      quickReplies[1].payload = JSON.stringify({ action: configConstants.LIST_GOOD_KEYWords })
+      quickReplies[1].payload = JSON.stringify({ action: configConstants.LIST_GOOD_KEYWORDS })
       quickReplies[1].title = 'List Good Keywords';
     }
-    else if (keywords == configConstants.BAD_KEYWords) {
-      quickReplies[0].payload = JSON.stringify({ action: configConstants.ADD_BAD_KEYWords })
+    else if (keywords == configConstants.BAD_KEYWORDS) {
+      quickReplies[0].payload = JSON.stringify({ action: configConstants.ADD_BAD_KEYWORDS })
       quickReplies[0].title = 'Add Bad Keywords';
-      quickReplies[1].payload = JSON.stringify({ action: configConstants.LIST_BAD_KEYWords })
+      quickReplies[1].payload = JSON.stringify({ action: configConstants.LIST_BAD_KEYWORDS })
       quickReplies[1].title = 'List Bad Keywords';
     }
+
     messengerService.sendQuickRepliesMessage(user.fbid, text, quickReplies);
   }
   
