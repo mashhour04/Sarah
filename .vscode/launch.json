@@ -8,6 +8,9 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
+      "env": {
+        "NODE_ENV": "dev_page",
+      },
       "program": "${workspaceFolder}/app.js"
     }
   ]

@@ -245,3 +245,5 @@ croneJobs();
  * croneJobs
  * !end
  */
+
+ console.log('enviroment', process.env.NODE_ENV);
