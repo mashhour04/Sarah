@@ -9,7 +9,6 @@ const log = require('npmlog');
 const multer = require('multer');
 const passport = require('passport');
 
-
 const jwt = require('jsonwebtoken');
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
@@ -26,7 +25,6 @@ global._ = require('lodash');
 
 collector.init();
 
-
 require('dotenv').config();
 
 const app = express();
@@ -41,14 +39,32 @@ app.get('/api/getBadContent', (req, res) => {
   contentModel
     .find({ status: 'bad' })
     .select('message created_time id')
-    .then((data) => {
+    .then(data => {
       res.status(200).json({
-        hits: data.map((el) => ({
+        hits: data.map(el => ({
+          content: `${el.message.slice(0, 100)}...`,
+          contentType: 'post',
+          date: moment(el.created_time).format('MMMM Do YYYY, HH:mm'),
+          link: `https://facebook.com/${el.id}`
+        }))
+      });
+    });
+});
+
+app.get('/api/spamContent', (req, res) => {
+  contentModel
+    .find({ 'spam.status': 'bad' })
+    .select('message created_time id spam from')
+    .then(data => {
+      res.status(200).json({
+        hits: data.map(el => ({
           content: `${el.message.slice(0, 100)}...`,
           contentType: 'post',
           date: moment(el.created_time).format('MMMM Do YYYY, HH:mm'),
           link: `https://facebook.com/${el.id}`,
-        })),
+          spamRepeated: el.spam.count,
+          writerName: el.from.name
+        }))
       });
     });
 });
@@ -83,16 +99,16 @@ passport.use(
       clientSecret: config.get('FACEBOOK_APP_SECRET'),
       callbackURL: config.get('callbackURL')
     },
-    function (accessToken, refreshToken, profile, cb) {
-      adminModel.findOrCreate({ facebookId: profile.id, profile, accessToken, refreshToken }, function (
-        err,
-        user
-      ) {
-        if (err) {
-          console.log('error happened in passport facebook', err.message)
+    function(accessToken, refreshToken, profile, cb) {
+      adminModel.findOrCreate(
+        { facebookId: profile.id, profile, accessToken, refreshToken },
+        function(err, user) {
+          if (err) {
+            console.log('error happened in passport facebook', err.message);
+          }
+          return cb(err, user);
         }
-        return cb(err, user);
-      });
+      );
     }
   )
 );
@@ -112,9 +128,9 @@ passport.use(
   })
 );
 
-passport.serializeUser(() => { });
+passport.serializeUser(() => {});
 
-passport.deserializeUser(async () => { });
+passport.deserializeUser(async () => {});
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('uploads'));
@@ -160,7 +176,7 @@ app.get('/failure', (req, res) => {
   });
 });
 
-app.post('/avatar', uploads.single('avatar'), (req) => {
+app.post('/avatar', uploads.single('avatar'), req => {
   console.log('the file', req.file);
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
@@ -183,23 +199,24 @@ app.post(
   loginHandler
 );
 
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['groups_access_member_info', 'publish_to_groups'] }));
+app.get(
+  '/auth/facebook',
+  passport.authenticate('facebook', {
+    scope: ['groups_access_member_info', 'publish_to_groups']
+  })
+);
 
 app.get(
   '/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function (req, res) {
+  function(req, res) {
     // Successful authentication, redirect home.
-    console.log('callback', req.user)
+    console.log('callback', req.user);
     res.redirect('/');
   }
 );
 
-
-app.use(
-  '/webhook',
-  webHookRouter.getRouter
-);
+app.use('/webhook', webHookRouter.getRouter);
 
 app.use(
   '/api',
@@ -265,4 +282,4 @@ croneJobs();
  * !end
  */
 
- console.log('enviroment', process.env.NODE_ENV);
+console.log('enviroment', process.env.NODE_ENV);

@@ -21,6 +21,14 @@ const contentSchema = new Schema({
     enum: ['pending', 'clean', 'bad', 'approved', 'confirmed_bad'],
     default: 'pending',
   },
+  spam: {
+    status: {
+      type: String,
+      enum: ['pending', 'clean', 'bad', 'approved', 'confirmed_bad'],
+      default: 'pending',
+    },
+    count: { type: Number, default: 0 },
+  },
   parents: [String],
   from: {
     name: String,
