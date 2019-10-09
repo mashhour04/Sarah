@@ -2,6 +2,8 @@ const BotUtils = require('../botutil');
 const senderService = require('../senderService');
 const configConstants = require('../constants/configConstants');
 
+const { i18n } = require('../helpers');
+
 class PostBackReceiver {
   static router(user, event) {
     const { postback } = event;
@@ -18,17 +20,11 @@ class PostBackReceiver {
     // }
     else if (parsed.action === configConstants.CONFIGURE_SARAH) {
       PostBackReceiver.receivedStartConfiguration(user);
-    }
-
-    else if (parsed.action === configConstants.GOOD_KEYWORDS) {
+    } else if (parsed.action === configConstants.GOOD_KEYWORDS) {
       PostBackReceiver.receivedGoodKeywords(user);
-    }
-
-    else if (parsed.action === configConstants.BAD_KEYWORDS) {
+    } else if (parsed.action === configConstants.BAD_KEYWORDS) {
       PostBackReceiver.receivedBadKeywords(user);
-    }
-
-    else PostBackReceiver.receivedGreetingMessage(user, event);
+    } else PostBackReceiver.receivedGreetingMessage(user, event);
   }
 
   static async receivedStartConfiguration(user) {
@@ -36,7 +32,7 @@ class PostBackReceiver {
     session.step = configConstants.PERCENTAGE_OF_CONFIDENCE;
     user.markModified('session');
     await user.save();
-    const message = 'can you enter percentage of confidence ?'
+    const message = 'can you enter percentage of confidence ?';
     senderService.sendConfidence(user, message);
   }
 
@@ -45,7 +41,8 @@ class PostBackReceiver {
     session.step = configConstants.GOOD_KEYWORDS;
     user.markModified('session');
     await user.save();
-    const message = 'what do you want ?';
+    const key = 'what_do_you_want';
+    const message = i18n.__(key);
     senderService.sendKeywordsChoices(user, message, configConstants.GOOD_KEYWORDS);
   }
 
@@ -54,7 +51,8 @@ class PostBackReceiver {
     session.step = configConstants.BAD_KEYWORDS;
     user.markModified('session');
     await user.save();
-    const message = 'what do you want ?';
+    const key = 'what_do_you_want';
+    const message = i18n.__(key);
     senderService.sendKeywordsChoices(user, message, configConstants.BAD_KEYWORDS);
   }
 

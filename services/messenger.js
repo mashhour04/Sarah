@@ -51,7 +51,7 @@ class Messenger {
           intervalStart * seconds + 1000,
           id,
           text,
-          intervalStart
+          intervalStart,
         );
       });
     });
@@ -66,7 +66,7 @@ class Messenger {
     return messenger.sendQuickRepliesMessage({
       id,
       attachment: text,
-      quickReplies
+      quickReplies,
     });
   }
   // CallsendAPI for messages

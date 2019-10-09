@@ -1,4 +1,6 @@
 const { messengerService } = require('./messenger');
+const { i18n } = require('./helpers');
+const { keywordsModel } = require('../model');
 const configConstants = require('./constants/configConstants');
 
 class SenderService {
@@ -83,21 +85,28 @@ class SenderService {
       }
     ];
     if (keywords == configConstants.GOOD_KEYWORDS) {
+      const addKey = 'add_good_keywords';
+      const listKey = 'list_keywords';
       quickReplies[0].payload = JSON.stringify({ action: configConstants.ADD_GOOD_KEYWORDS })
-      quickReplies[0].title = 'Add Good Keywords';
+      quickReplies[0].title = i18n.__(addKey);
       quickReplies[1].payload = JSON.stringify({ action: configConstants.LIST_GOOD_KEYWORDS })
-      quickReplies[1].title = 'List Good Keywords';
-    }
-    else if (keywords == configConstants.BAD_KEYWORDS) {
+      quickReplies[1].title = i18n.__(listKey);
+    } else if (keywords === configConstants.BAD_KEYWORDS) {
+      const addKey = 'add_bad_keywords';
+      const listKey = 'list_keywords';
       quickReplies[0].payload = JSON.stringify({ action: configConstants.ADD_BAD_KEYWORDS })
-      quickReplies[0].title = 'Add Bad Keywords';
+      quickReplies[0].title = i18n.__(addKey);
       quickReplies[1].payload = JSON.stringify({ action: configConstants.LIST_BAD_KEYWORDS })
-      quickReplies[1].title = 'List Bad Keywords';
+      quickReplies[1].title = i18n.__(listKey);
     }
-
     messengerService.sendQuickRepliesMessage(user.fbid, text, quickReplies);
   }
   
+  static sendKeywords(user, type) {
+    console.log('thew model ', keywordsModel)
+    // const keywords  = keywordsModel.find({ type });
+  }
+
 }
 
 module.exports = SenderService;
