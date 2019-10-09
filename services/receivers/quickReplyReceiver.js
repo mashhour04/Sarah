@@ -16,15 +16,14 @@ class QuickReplyReceiver {
       QuickReplyReceiver.receivedListKeyWords(user, 'good');
     } else if (parsed.action === configConstants.LIST_BAD_KEYWORDS) {
       QuickReplyReceiver.receivedListKeyWords(user, 'bad');
-    } else if (parsed.action === configConstants.DONE_ADDING_KEYWORDS || parsed.action === configConstants.NOT_DONE_ADDING_KEYWORDS) {
+    } else if (
+      parsed.action === configConstants.DONE_ADDING_KEYWORDS
+      || parsed.action === configConstants.NOT_DONE_ADDING_KEYWORDS
+    ) {
       QuickReplyReceiver.receivedDoneAnswer(user, parsed.action);
-  } else {
+    } else {
       // Unhandled_Quick_Reply
     }
-    
-
-  static receivedGreetingMessage(user, event) {
-    senderService.sendGreetingMessage(user);
   }
 
   static async receivedDoneAnswer(user, action) {
@@ -35,11 +34,10 @@ class QuickReplyReceiver {
       session.step = configConstants.NORMAL;
       user.markModified('session');
       await user.save();
-    }
-    else message = 'Ok, You Can Complete..';
+    } else message = 'Ok, You Can Complete..';
     senderService.sendDoneResponse(user, message);
-
   }
+
   static async receivedPostType(user, event) {
     const session = user.session || {};
     session.step = configConstants.PERCENTAGE_OF_CONFIDENCE;
