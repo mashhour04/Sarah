@@ -37,9 +37,7 @@ class Facebook {
       if (!this.api) {
         backup = await this.login();
       }
-      console.log('the backup', backup);
       const response = await (this.api) ? this.api.sendMessage(text, targetId) : backup.sendMessage(text, targetId);
-      console.log('the response', response);
       log.info('successfully sent message to ', targetId);
       return response;
     } catch (err) {

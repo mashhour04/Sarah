@@ -18,7 +18,8 @@ class PostsCollector {
   static async init() {
     let targets = [];
     const admins = await adminModel.find({});
-    if (admins && admins.length > 0) {
+    // eslint-disable-next-line no-constant-condition
+    if (admins && admins.length > 0 && false) {
       admins.map((admin) => {
         if (admin.groupId) {
           targets.push(admin);
@@ -32,11 +33,13 @@ class PostsCollector {
   }
 
   static initTargetsJobs(targets) {
+    console.log('colll', targets);
     targets.map(async (target, index) => {
+      
       PostsCollector.collectJob(target);
       setTimeout(async (t) => {
         setInterval(() => {
-          // PostsCollector.collectJob(t);
+          PostsCollector.collectJob(t);
         }, 40 * 1000);
       }, index * 2 * 60000, target);
     });
