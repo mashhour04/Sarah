@@ -1,0 +1,26 @@
+{
+ "schemaVersion" :2 ,
+ "dockerfileLines": [
+                        "FROM node:8.16.1-alpine",
+                        "RUN mkdir -p /usr/src/app",
+                        "WORKDIR /usr/src/app",
+                        "COPY ./package.json /usr/src/app/",
+                        "RUN apk --no-cache add --virtual builds-deps build-base python",
+                        "RUN npm config set unsafe-perm true",
+                        "RUN npm install npm@6.4.1 -g",
+                        "RUN npm install pm2 -g",
+                        "RUN npm install node-gyp -g",
+                        "RUN npm install build-tools -g",
+                        "RUN npm install && npm cache clean --force",
+                        "COPY ./ /usr/src/app",
+                        "ENV NODE_ENV production",
+                        "ENV PORT 80",
+                        "ENV PM2_PUBLIC_KEY 7vk4h1h92fa90rs",
+                        "ENV PM2_SECRET_KEY v86rwhih6r0q35b",
+                        "EXPOSE 80",
+                 
+         
+                        "CMD [ \"pm2-runtime\", \"startup.js\" ]"
+                    ]
+}
+
