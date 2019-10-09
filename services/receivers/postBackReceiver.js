@@ -8,7 +8,7 @@ class PostBackReceiver {
     const { payload } = postback;
     const parsed = BotUtils.parsePayload(payload);
     console.log('parsed.action: ', parsed.action);
-
+    
     if (!parsed) throw new Error('received non JSON payload');
     // else if (parsed.action === configConstants.CONFIGURE_SARAH) {
     //   const actions = ['posts', 'comments', 'replies'];
@@ -61,6 +61,7 @@ class PostBackReceiver {
   static receivedGreetingMessage(user, event) {
     senderService.sendGreetingMessage(user);
   }
+
   static receivedConfigurationMessage(user, message, configAction, actions) {
     senderService.sendConfigurationMessage(user, message, configAction, actions);
   }

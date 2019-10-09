@@ -15,10 +15,12 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 const { Strategy } = require('passport-local');
 const FacebookStrategy = require('passport-facebook');
+const moment = require('moment');
 
 const { adminModel } = require('./model');
 
 const collector = require('./services/collector');
+const { contentModel } = require('./model');
 
 global._ = require('lodash');
 
@@ -35,6 +37,21 @@ app.use(logger('combined'));
 // Add headers
 app.use(cors());
 
+app.get('/api/getBadContent', (req, res) => {
+  contentModel
+    .find({ status: 'bad' })
+    .select('message created_time id')
+    .then((data) => {
+      res.status(200).json({
+        hits: data.map((el) => ({
+          content: `${el.message.slice(0, 100)}...`,
+          contentType: 'post',
+          date: moment(el.created_time).format('MMMM Do YYYY, HH:mm'),
+          link: `https://facebook.com/${el.id}`,
+        })),
+      });
+    });
+});
 const { apiRouter } = require('./routes/api/apiRouter');
 const { webHookRouter } = require('./routes/webHookRouter');
 
