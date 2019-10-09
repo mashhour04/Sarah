@@ -90,11 +90,9 @@ class TextsReceiver {
   static async receivedBadSearchQuery(user, query) {
     const posts = await contentModel.find({
       $or: [{
-        message: { $regex: new RegExp(query), $options: 'i'},
-        status: 'bad',
+        message: { $regex: new RegExp(query), $options: 'i'}
       }, {
-        story: { $regex: new RegExp(query), $options: 'i' },
-        status: 'bad',
+        story: { $regex: new RegExp(query), $options: 'i' }
       }],
     });
 
