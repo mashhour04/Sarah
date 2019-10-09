@@ -50,7 +50,7 @@ class TextsReceiver {
       TextsReceiver.sendDoneQuestionMessage(user, event);
     } else if (step === configConstants.SEARCH_ALL_CONTENT) {
       // Searching groups api for posts matching this keyword
-      TextsReceiver.receivedGroupSearchQuery(user, text);
+      TextsReceiver.receivedBadSearchQuery(user, text);
     } else if (step === configConstants.SEARCH_FILTERED_CONTENT) {
       TextsReceiver.receivedBadSearchQuery(user, text);
     }
