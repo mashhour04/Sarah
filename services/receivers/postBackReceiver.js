@@ -8,7 +8,7 @@ class PostBackReceiver {
     const { payload } = postback;
     const parsed = BotUtils.parsePayload(payload);
     console.log('parsed.action: ', parsed.action);
-
+    
     if (!parsed) throw new Error('received non JSON payload');
     // else if (parsed.action === configConstants.CONFIGURE_SARAH) {
     //   const actions = ['posts', 'comments', 'replies'];
@@ -20,12 +20,12 @@ class PostBackReceiver {
       PostBackReceiver.receivedStartConfiguration(user);
     }
 
-    else if (parsed.action === configConstants.GOOD_KEYWARDS) {
-      PostBackReceiver.receivedGoodKeywards(user);
+    else if (parsed.action === configConstants.GOOD_KEYWORDS) {
+      PostBackReceiver.receivedGoodKeywords(user);
     }
 
-    else if (parsed.action === configConstants.BAD_KEYWARDS) {
-      PostBackReceiver.receivedBadKeywards(user);
+    else if (parsed.action === configConstants.BAD_KEYWORDS) {
+      PostBackReceiver.receivedBadKeywords(user);
     }
 
     else PostBackReceiver.receivedGreetingMessage(user, event);
@@ -40,27 +40,28 @@ class PostBackReceiver {
     senderService.sendConfidence(user, message);
   }
 
-  static async receivedGoodKeywards(user) {
+  static async receivedGoodKeywords(user) {
     const session = user.session || {};
-    session.step = configConstants.GOOD_KEYWARDS;
+    session.step = configConstants.GOOD_KEYWORDS;
     user.markModified('session');
     await user.save();
     const message = 'what do you want ?';
-    senderService.sendKeywardsInstruction(user, message, configConstants.GOOD_KEYWARDS);
+    senderService.sendKeywordsChoices(user, message, configConstants.GOOD_KEYWORDS);
   }
 
-  static async receivedBadKeywards(user) {
+  static async receivedBadKeywords(user) {
     const session = user.session || {};
-    session.step = configConstants.BAD_KEYWARDS;
+    session.step = configConstants.BAD_KEYWORDS;
     user.markModified('session');
     await user.save();
     const message = 'what do you want ?';
-    senderService.sendKeywardsInstruction(user, message, configConstants.BAD_KEYWARDS);
+    senderService.sendKeywordsChoices(user, message, configConstants.BAD_KEYWORDS);
   }
 
   static receivedGreetingMessage(user, event) {
     senderService.sendGreetingMessage(user);
   }
+
   static receivedConfigurationMessage(user, message, configAction, actions) {
     senderService.sendConfigurationMessage(user, message, configAction, actions);
   }

@@ -14,12 +14,12 @@
                         {
                             "title": "✔️ القائمة البيضاء",
                             "type": "postback",
-                            "payload": "{\"action\":\"add_good_keywards\"}"
+                            "payload": "{\"action\":\"good_keywords\"}"
                         },
                         {
                             "type": "postback",
                             "title": "❌ القائمة السوداء",
-                            "payload": "{\"action\":\"add_bad_keywards\"}"
+                            "payload": "{\"action\":\"bad_keywords \"}"
                         }
                     ]
                 },
