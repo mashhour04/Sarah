@@ -68,6 +68,7 @@ app.get('/api/spamContent', (req, res) => {
       });
     });
 });
+
 const { apiRouter } = require('./routes/api/apiRouter');
 const { webHookRouter } = require('./routes/webHookRouter');
 
