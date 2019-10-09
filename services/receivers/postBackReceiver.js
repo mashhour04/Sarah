@@ -26,6 +26,8 @@ class PostBackReceiver {
       PostBackReceiver.receivedBadKeywords(user);
     } else if (parsed.action === configConstants.GET_STARTED_PAYLOAD) {
       PostBackReceiver.receivedGreetingMessage(user);
+    } else if (parsed.action === configConstants.CONTENT_SEARCH) {
+      PostBackReceiver.receivedStartSearch(user);
     } else PostBackReceiver.receivedGreetingMessage(user, event);
   }
 
@@ -56,6 +58,14 @@ class PostBackReceiver {
     const key = 'what_do_you_want';
     const message = i18n.__(key);
     senderService.sendKeywordsChoices(user, message, configConstants.BAD_KEYWORDS);
+  }
+
+  static async receivedStartSearch(user) {
+    try {
+      senderService.sendSearchType(user);
+    } catch (err) {
+      console.log('unable to send the keywords list', err.message);
+    }
   }
 
   static receivedGreetingMessage(user, event) {

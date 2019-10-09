@@ -27,9 +27,9 @@ class QuickReplyReceiver {
       QuickReplyReceiver.receivedGetDashboardLink(user);
     } else if (parsed.action === configConstants.CONTENT_SEARCH) {
       QuickReplyReceiver.receivedStartSearch(user);
-    }  else if (parsed.action === configConstants.SEARCH_ALL_CONTENT) {
+    } else if (parsed.action === configConstants.SEARCH_ALL_CONTENT) {
       QuickReplyReceiver.receivedSearchType(user, configConstants.SEARCH_ALL_CONTENT);
-    }  else if (parsed.action === configConstants.SEARCH_FILTERED_CONTENT) {
+    } else if (parsed.action === configConstants.SEARCH_FILTERED_CONTENT) {
       QuickReplyReceiver.receivedSearchType(user, configConstants.SEARCH_FILTERED_CONTENT);
     } else {
       // Unhandled_Quick_Reply
