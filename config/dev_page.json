@@ -4,7 +4,7 @@
     "facebookAccessToken": "EAAGxzIzEQqUBAI7N3Q2qzWamgOSNMocPbBq9pqZBpJIryZCHV935Q5h0fDJNy7AVZC4a6UASQavhelDgxieNGBeaq4driLwgjG1I28NeCcnKWI7FIZBwYDQehVTWEdnUML7gfIvbSfnLtax2RZAIRq3JyZCHmRvGP5gdhkaqb7Ie3t4waboNfx",
     "facebookGroupAPIToken": "EAAieW3vdsNsBAIewarLNqN14oxnlH4OK6OsNNNZC1dhlOW7e4yl2jdGHM8iRDW2FRRAKHZBwPBFCWhOj41XNO0DfZBktEjBeytFaGmMUScg0XgzRRsPpZCFf8XuqhuKJKD7mY4pATZAChfup3cwaOAG4apMPlKN78QtjZB0RsYdgZDZD",
     "verify_token": "sarah",
-    "callbackURL": "https://acfcae20.ngrok.io/auth/facebook/callback",
+    "callbackURL": "https://bot.sarahbot.xyz/auth/facebook/callback",
     "FACEBOOK_APP_ID": "2425915571024091",
     "FACEBOOK_APP_SECRET": "ef9a5d299bfcd04f1ef7207e9e7fad4d",
     "video_indexer_key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJBY2NvdW50SWQiOiI0YWJjMjMwZi02ZTI3LTQ5ZDgtOTA5Zi1jYjk4Njk4NzM4ZGIiLCJBbGxvd0VkaXQiOiJUcnVlIiwiRXh0ZXJuYWxVc2VySWQiOiI5MzQ2RDQxQkYwMjc0NzEyQjRFQzY2MUJCM0I1NDcyRCIsIlVzZXJUeXBlIjoiTWljcm9zb2Z0Q29ycEFhZCIsImlzcyI6Imh0dHBzOi8vd3d3LnZpZGVvaW5kZXhlci5haS8iLCJhdWQiOiJodHRwczovL3d3dy52aWRlb2luZGV4ZXIuYWkvIiwiZXhwIjoxNTcwMjI4MTU0LCJuYmYiOjE1NzAyMjQyNTR9.dyNwAQ5ifSvoAutnyS0R2OnI37qv8PEJufAEvfL0bgQ",
