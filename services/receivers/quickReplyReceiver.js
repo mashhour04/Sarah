@@ -2,6 +2,8 @@ const BotUtils = require('../botutil');
 const senderService = require('../senderService');
 const configConstants = require('../constants/configConstants');
 
+const { i18n } = require('../helpers');
+
 class QuickReplyReceiver {
   static router(user, event) {
     const { payload } = event.message.quick_reply;
@@ -29,12 +31,13 @@ class QuickReplyReceiver {
   static async receivedDoneAnswer(user, action) {
     let message;
     if (action === configConstants.DONE_ADDING_KEYWORDS) {
-      message = 'Ok, The New Keywords Were Saved Successfully';
+      const key = 'new_keywords_saved';
+      message = i18n.__(key);
       const session = user.session || {};
       session.step = configConstants.NORMAL;
       user.markModified('session');
       await user.save();
-    } else message = 'Ok, You Can Complete..';
+    } else message = i18n.__('okay_complete');
     senderService.sendDoneResponse(user, message);
   }
 
@@ -52,7 +55,9 @@ class QuickReplyReceiver {
     session.step = configConstants.ADD_GOOD_KEYWORDS;
     user.markModified('session');
     await user.save();
-    const message = 'Please Enter Your Good Keywords Separated By Commas "," !';
+    const key = 'add_comma_sperated';
+    // const message = 'Please Enter Your Good Keywords Separated By Commas "," !';
+    const message = i18n.__(key);
     senderService.sendGoodKeywordsInstruction(user, message);
   }
 
@@ -61,12 +66,18 @@ class QuickReplyReceiver {
     session.step = configConstants.ADD_BAD_KEYWORDS;
     user.markModified('session');
     await user.save();
-    const message = 'Please Enter Your Good Keywords Separated By Commas "," !';
+    const key = 'add_comma_sperated';
+    // const message = 'Please Enter Your Good Keywords Separated By Commas "," !';
+    const message = i18n.__(key);
     senderService.sendBadKeywordsInstruction(user, message);
   }
 
   static async receivedListKeyWords(user, type) {
-    senderService.sendKeywords(user, type);
+    try {
+      senderService.sendKeywords(user, type);
+    } catch (err) {
+      console.log('unable to send the keywords list', err.message);
+    }
   }
 }
 

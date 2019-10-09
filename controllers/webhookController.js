@@ -13,7 +13,7 @@ const TextsReceiver = require('../services/receivers/textsReceiver');
 const { messenger, firstEntity } = messengerService;
 
 const validationAPI = new phoneValidation({
-  access_key: 'bd802393d1e2cd2f7e56744f23162ce2'
+  access_key: 'bd802393d1e2cd2f7e56744f23162ce2',
 });
 
 const caller = () => true;
@@ -28,7 +28,7 @@ class WebHookController {
     console.log(
       'verifying',
       req.query['hub.verify_token'],
-      config.get('verify_token')
+      config.get('verify_token'),
     );
     if (req.query['hub.verify_token'] === config.get('verify_token')) {
       log.info('TOKEN VERIFIED');
@@ -41,7 +41,7 @@ class WebHookController {
       res.status(200).send('okay');
       const { entry } = req.body;
       const { messaging } = entry[0];
-      messaging.map(async event => {
+      messaging.map(async (event) => {
         const fbid = event.sender.id;
         const user = await userModel
           .findOrCreate(fbid, {
@@ -52,14 +52,14 @@ class WebHookController {
             session: 1,
             cache: 1,
             email: 1,
-            phone: 1
+            phone: 1,
           })
-          .catch(err => {
+          .catch((err) => {
             messenger.sendTextMessage({
               id: fbid,
-              text: 'Sorry, But something went wrong'
+              text: 'Sorry, But something went wrong',
             });
-            logger.error(err);
+            console.error(err);
           });
         if (user.error) {
           return;
@@ -106,7 +106,7 @@ class WebHookController {
       }
     } else if (postback) {
       logger.info(
-        `Postback Check! senderId: ${event.sender.id}; payload: ${event.postback.payload}`
+        `Postback Check! senderId: ${event.sender.id}; payload: ${event.postback.payload}`,
       );
       PostBackReceiver.router(user, event);
     } else if (referral) {
@@ -119,10 +119,10 @@ class WebHookController {
 
   static async validatePhoneNumber(number) {
     return new Promise((resolve, reject) => {
-      var query = {
-        number: number
+      let query = {
+        number,
       };
-      validationAPI.validate(query, function(err, result) {
+      validationAPI.validate(query, (err, result) => {
         if (err) {
           resolve({ err, success: false });
           return log.info('Validate Callback (Error): ' + JSON.stringify(err));
@@ -135,7 +135,7 @@ class WebHookController {
 
   static async checkForInput(user, text) {
     if (user.step == 'phone') {
-      let response = await WebHookController.validatePhoneNumber(text);
+      const response = await WebHookController.validatePhoneNumber(text);
       if (response.success && response.success == true) {
         log.info('Results', response.result.valid);
         if (response.result.valid == true) {

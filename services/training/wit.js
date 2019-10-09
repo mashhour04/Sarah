@@ -146,6 +146,37 @@ async function createSamples({ entity, value }) {
   }
 }
 
+
+module.exports.createSamplesFromKeywords = async ({ entity, value, keywords }) => {
+  keywords = keywords || [];
+  const chunks = _.chunk(keywords, 20);
+  entity = entity || 'intent';
+  value = value || `profane${Math.floor(Math.random() * 20000)}`;
+  for (let i = 0; i < chunks.length; i += 1) {
+    const chunk = chunks[i];
+    const samples = chunk.map((text) => ({
+      text,
+      entities: [
+        {
+          entity,
+          value: `profane_${Math.floor(Math.random() * 50)}`,
+          start: 0,
+          end: value.length,
+        },
+      ],
+    }));
+
+    const train = await insertSamples({ samples });
+    // const message = await Promise.all(messagePromises);
+
+    if (train.error) {
+      console.log('failed for ', train, 'with error', train.error);
+    } else {
+      console.log('sucess for ', train);
+    }
+    await delay(10000);
+  }
+};
 module.exports.messageWit = async ({ expression }) => {
   try {
     const data = await client.message(expression);
@@ -154,6 +185,7 @@ module.exports.messageWit = async ({ expression }) => {
     return err;
   }
 };
+
 
 async function delay(amount, ...args) {
   return new Promise((resolve, reject) => {
@@ -165,36 +197,4 @@ async function delay(amount, ...args) {
       ...args,
     );
   });
-}
-
-// async..await is not allowed in global scope, must use a wrapper
-async function email({ vehicle, total, index }) {
-  // Generate test SMTP service account from ethereal.email
-
-  // create reusable transporter object using the default SMTP transport
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // true for 465, false for other ports
-    auth: {
-      user: testAccount.user, // generated ethereal user
-      pass: testAccount.pass, // generated ethereal password
-    },
-  });
-  const subject = vehicle
-    ? `End Vehicle:  ${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.body} ✔`
-    : `${index}  Total of Vehicles`;
-  const text = vehicle
-    ? `Vehicle: ${JSON.stringify(vehicle)}`
-    : `${index} Total : ${JSON.stringify(total)} `;
-  // send mail with defined transport object
-  const info = await transporter.sendMail({
-    from: '"Wit.AI Training  👻" <mpghknown9@gmail.com>', // sender address
-    to: 'mpghknown@gmail.com, mpghfamous@gmail.com', // list of receivers
-    subject, // Subject line
-    text, // plain text body
-  });
-
-  console.log('Message sent: %s', info.messageId);
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 }

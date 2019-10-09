@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Launch Program",
       "env": {
-        "NODE_ENV": "dev_page",
+        "NODE_ENV": "defaults",
       },
       "program": "${workspaceFolder}/app.js"
     }

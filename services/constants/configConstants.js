@@ -14,5 +14,8 @@ module.exports = {
   WHAT_ACTION_TO_DO: 'what_action_to_do',
   TRAIN_THE_BOT_BLACK_LIST: 'train_the_bot_black_list',
   TRAIN_THE_BOT_WHITE_LIST: 'train_the_bot_white_list',
-  NORMAL: "normal"
+  GET_DASHBOARD_LINK: 'get_dashboard_link',
+  CONTENT_SEARCH: 'content_search',
+  GET_STARTED_PAYLOAD: 'GET_STARTED_PAYLOAD',
+  NORMAL: 'normal',
 };

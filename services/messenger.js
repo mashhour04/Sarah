@@ -104,7 +104,7 @@ function sendTypingOn(recipientId) {
   log.info('Turning typing indicator on');
   const messageData = {
     recipient: {
-      id: recipientId
+      id: recipientId,
     },
     sender_action: 'typing_on'
   };
@@ -123,5 +123,7 @@ function sendTypingOff(recipientId) {
 }
 module.exports = {
   messengerService: new Messenger(),
-  callSendAPI
+  callSendAPI,
+  sendTypingOn,
+  sendTypingOff,
 };

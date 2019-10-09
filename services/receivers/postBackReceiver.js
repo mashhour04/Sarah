@@ -24,6 +24,8 @@ class PostBackReceiver {
       PostBackReceiver.receivedGoodKeywords(user);
     } else if (parsed.action === configConstants.BAD_KEYWORDS) {
       PostBackReceiver.receivedBadKeywords(user);
+    } else if (parsed.action === configConstants.GET_STARTED_PAYLOAD) {
+      PostBackReceiver.receivedGreetingMessage(user);
     } else PostBackReceiver.receivedGreetingMessage(user, event);
   }
 
