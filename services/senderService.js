@@ -4,6 +4,7 @@ const { i18n } = require('./helpers');
 const { keywordsModel } = require('../model');
 const configConstants = require('./constants/configConstants');
 const BotUtils = require('./botutil');
+
 class SenderService {
   static sendDoneQuestionMessage(user) {
     const key = 'are_you_done';
@@ -29,19 +30,10 @@ class SenderService {
     const quickReplies = [
       {
         content_type: 'text',
-        title: i18n.__('white_list'),
-        payload: JSON.stringify({ action: configConstants.GOOD_KEYWORDS }),
-      },
-      {
-        content_type: 'text',
-        title: i18n.__('black_list'),
-        payload: JSON.stringify({ action: configConstants.BAD_KEYWORDS }),
-      },
-      {
-        content_type: 'text',
         title: i18n.__('dashboard'),
         payload: JSON.stringify({ action: configConstants.GET_DASHBOARD_LINK }),
-      }, {
+      },
+      {
         content_type: 'text',
         title: i18n.__('search'),
         payload: JSON.stringify({ action: configConstants.CONTENT_SEARCH }),
@@ -120,7 +112,9 @@ class SenderService {
     console.log('thew model ', keywordsModel);
     const keywords = await keywordsModel.find({ type });
     if (keywords && keywords.length > 0) {
-      const firstText = (type === 'good') ? i18n.__('here_is_good_keywordslist') : i18n.__('here_is_bad_keywordslist');
+      const firstText = type === 'good'
+        ? i18n.__('here_is_good_keywordslist')
+        : i18n.__('here_is_bad_keywordslist');
       await messengerService.sendTextMessage(user.fbid, firstText);
       await BotUtils.chatDelay(user.fbid, 2000);
       const text = keywords.map((keyword) => keyword.keyword).join('\n');
@@ -128,9 +122,26 @@ class SenderService {
     }
     const sorryKey = 'sorry_no_keywords_inserted';
     const sorryText = i18n.__(sorryKey);
-    const identifier = (type === 'good') ? configConstants.GOOD_KEYWORDS : configConstants.BAD_KEYWORDS;
+    const identifier = type === 'good' ? configConstants.GOOD_KEYWORDS : configConstants.BAD_KEYWORDS;
     const quickReplies = getKeywordsQuickReplies(identifier, true);
     return messengerService.sendQuickRepliesMessage(user.fbid, sorryText, quickReplies);
+  }
+
+  static async sendDashboardLink(user) {
+    const key = 'send_dashboard_link';
+    const message = i18n.__(key);
+    messengerService.sendTextMessage(user.fbid, message);
+  }
+
+  static async sendSearchType(user) {
+    const key = 'what_to_search';
+    const attachment = i18n.__(key);
+    const quickReplies = getSearchTypesQuickReplies();
+    return messengerService.sendQuickRepliesMessage(user.fbid, attachment, quickReplies);
+  }
+
+  static async sendPosts(id, elements) {
+    return messengerService.sendGenerTemplate(id, elements);
   }
 }
 
@@ -165,4 +176,17 @@ function getKeywordsQuickReplies(keywords, splice = false) {
   return quickReplies;
 }
 
+function getSearchTypesQuickReplies() {
+  const quickReplies = [{
+    content_type: 'text',
+    title: i18n.__('all_content'),
+    payload: JSON.stringify({ action: configConstants.SEARCH_ALL_CONTENT }),
+  }, {
+    content_type: 'text',
+    title: i18n.__('filtered_content'),
+    payload: JSON.stringify({ action: configConstants.SEARCH_FILTERED_CONTENT }),
+  }];
+
+  return quickReplies;
+}
 module.exports = SenderService;

@@ -23,6 +23,14 @@ class QuickReplyReceiver {
       || parsed.action === configConstants.NOT_DONE_ADDING_KEYWORDS
     ) {
       QuickReplyReceiver.receivedDoneAnswer(user, parsed.action);
+    } else if (parsed.action === configConstants.GET_DASHBOARD_LINK) {
+      QuickReplyReceiver.receivedGetDashboardLink(user);
+    } else if (parsed.action === configConstants.CONTENT_SEARCH) {
+      QuickReplyReceiver.receivedStartSearch(user);
+    }  else if (parsed.action === configConstants.SEARCH_ALL_CONTENT) {
+      QuickReplyReceiver.receivedSearchType(user, configConstants.SEARCH_ALL_CONTENT);
+    }  else if (parsed.action === configConstants.SEARCH_FILTERED_CONTENT) {
+      QuickReplyReceiver.receivedSearchType(user, configConstants.SEARCH_FILTERED_CONTENT);
     } else {
       // Unhandled_Quick_Reply
     }
@@ -78,6 +86,33 @@ class QuickReplyReceiver {
     } catch (err) {
       console.log('unable to send the keywords list', err.message);
     }
+  }
+
+  static async receivedGetDashboardLink(user) {
+    try {
+      senderService.sendDashboardLink(user);
+    } catch (err) {
+      console.log('unable to send the keywords list', err.message);
+    }
+  }
+
+  static async receivedStartSearch(user) {
+    try {
+      senderService.sendSearchType(user);
+    } catch (err) {
+      console.log('unable to send the keywords list', err.message);
+    }
+  }
+
+  static async receivedSearchType(user, searchType) {
+    const session = user.session || {};
+    session.step = searchType;
+    user.markModified('session');
+    await user.save();
+    const key = 'enter_search_content';
+    // const message = 'Please Enter Your Good Keywords Separated By Commas "," !';
+    const message = i18n.__(key);
+    senderService.sendBadKeywordsInstruction(user, message);
   }
 }
 

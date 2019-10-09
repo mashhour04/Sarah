@@ -35,13 +35,16 @@ class PostsCollector {
   static initTargetsJobs(targets) {
     console.log('colll', targets);
     targets.map(async (target, index) => {
-      
       PostsCollector.collectJob(target);
-      setTimeout(async (t) => {
-        setInterval(() => {
-          PostsCollector.collectJob(t);
-        }, 40 * 1000);
-      }, index * 2 * 60000, target);
+      setTimeout(
+        async (t) => {
+          setInterval(() => {
+            PostsCollector.collectJob(t);
+          }, 80 * 1000);
+        },
+        index * 2 * 60000,
+        target,
+      );
     });
   }
 
@@ -64,7 +67,9 @@ class PostsCollector {
       const query = PostsCollector.getFieldsQuery();
       const path = `${groupId}/feed${query}`;
       graph.get(path, (err, res) => {
-        if (err) { return reject(err); }
+        if (err) {
+          return reject(err);
+        }
         resolve(res); // { id: '4', name: 'Mark Zuckerberg'... }
       });
     });
@@ -85,6 +90,20 @@ class PostsCollector {
     }
     return '';
   }
+
+  static searchGroup(query, groupId = constants.DEFAULT_GROUP_ID) {
+    return new Promise((resolve) => {
+      const params = { q: query };
+      const path = `${groupId}/feed`;
+      graph.get(path, params, (err, res) => {
+        if (err) {
+          console.log('error happened getting seearch query', err.message);
+          return resolve([]);
+        }
+        resolve(res); // { id: '4', name: 'Mark Zuckerberg'... }
+      });
+    });
+  }
 }
 
 const preparePosts = async (data) => {
@@ -95,7 +114,9 @@ const preparePosts = async (data) => {
   } catch (err) {
     console.log('something wrong happened checking extistance', err.message);
   }
-  let posts = existedPosts.length > 0 ? data.filter((post) => !existedPosts.find((o) => o && o.id === post.id)) : data;
+  let posts = existedPosts.length > 0
+    ? data.filter((post) => !existedPosts.find((o) => o && o.id === post.id))
+    : data;
   posts = posts.map((post) => {
     if (post.attachments) {
       post.attachments = post.attachments.data;

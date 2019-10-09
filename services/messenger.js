@@ -61,6 +61,10 @@ class Messenger {
     return messenger.sendTextMessage({ id, text });
   }
 
+  sendGenerTemplate(id, elements) {
+    return messenger.sendGenericMessage({ id, elements });
+  }
+
   sendQuickRepliesMessage(id, text, quickReplies) {
     console.log('sending gfreeting with text', text);
     return messenger.sendQuickRepliesMessage({

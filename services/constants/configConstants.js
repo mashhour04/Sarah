@@ -17,5 +17,7 @@ module.exports = {
   GET_DASHBOARD_LINK: 'get_dashboard_link',
   CONTENT_SEARCH: 'content_search',
   GET_STARTED_PAYLOAD: 'GET_STARTED_PAYLOAD',
+  SEARCH_ALL_CONTENT: 'search_all_content',
+  SEARCH_FILTERED_CONTENT: 'search_filtered_content',
   NORMAL: 'normal',
 };
